@@ -6,7 +6,7 @@ Pod::Spec.new do |spec|
   spec.authors      = { 'Quan Xiaosha' => 'quanxiaosha@gmail.com' }
   spec.summary      = 'Swift tooks like algorithm and persistent store'
   spec.source       = { :git => 'https://github.com/shiyizju/SwiftToolKit.git', :tag => "v#{spec.version.to_s}" }
-  spec.source_files = 'Sources/*, Sources/Algorithm/*, Sources/Persistent/*'
+  spec.source_files = 'Sources/*', 'Sources/Algorithm/*', 'Sources/Persistent/*'
   spec.requires_arc = true
   spec.dependency 'FMDB'
 
