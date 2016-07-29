@@ -1,9 +1,8 @@
 //
-//  KeyValueStore2.swift
+//  KeyValueStore.swift
 //  baomingba
 //
 //  Created by XiaoshaQuan on 4/1/16.
-//  Copyright © 2016 杭州求道网络科技有限公司. All rights reserved.
 //
 
 import Foundation

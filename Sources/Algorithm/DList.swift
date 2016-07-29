@@ -3,7 +3,6 @@
 //  baomingba
 //
 //  Created by XiaoshaQuan on 11/30/15.
-//  Copyright © 2015 杭州求道网络科技有限公司. All rights reserved.
 //
 
 
