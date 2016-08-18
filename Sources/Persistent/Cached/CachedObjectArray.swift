@@ -26,7 +26,7 @@ public class CachedObjectArray<T:SerializableObject> {
         _cache = []
         
         json2Object = { json in
-            let object = builder()
+            var object = builder()
             object.restoreFromDictionary(json)
             return object
         }
@@ -85,7 +85,7 @@ public class CachedObjectArray<T:SerializableObject> {
     }
     
     public func updateObjectAtIndex(index: Int, json: Json) {
-        let object = _cache[index]
+        var object = _cache[index]
         object.restoreFromDictionary(json)
         _store?.setValue(object2Json(object), forKey: "\(index)")
     }

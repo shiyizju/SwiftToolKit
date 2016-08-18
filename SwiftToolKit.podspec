@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
   spec.name         = 'SwiftToolKit'
   spec.version      = '0.0.1'
-  spec.license      = { :type => 'BSD' }
+  spec.license      = { :type => 'MIT' }
   spec.homepage     = 'https://github.com/shiyizju/SwiftToolKit'
   spec.authors      = { 'Quan Xiaosha' => 'quanxiaosha@gmail.com' }
   spec.summary      = 'Swift tooks like algorithm and persistent store'

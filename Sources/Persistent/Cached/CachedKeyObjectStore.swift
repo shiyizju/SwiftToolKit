@@ -21,14 +21,14 @@ public class CachedKeyObjectStore<ObjectType: SerializableObject> {
         // initialize objects
         let objectJsons : [String: Json] = _store.allKeyValues()
         _cache = objectJsons.map({ (key, json) -> (String, ObjectType) in
-            let object = self._builder()
+            var object = self._builder()
             object.restoreFromDictionary(json)
             return (key, object)
         })
     }
     
     private func transform(json: Json) -> ObjectType {
-        let object = _builder()
+        var object = _builder()
         object.restoreFromDictionary(json)
         return object
     }
@@ -41,7 +41,7 @@ public class CachedKeyObjectStore<ObjectType: SerializableObject> {
     
     // create if not exist, otherwise update
     public func setJson(json: Json, forKey key: String) {
-        if let object = _cache[key] {
+        if var object = _cache[key] {
             object.restoreFromDictionary(json)
             _store.setValue(object.convertToDictionary(), forKey: key)
         }
@@ -53,7 +53,7 @@ public class CachedKeyObjectStore<ObjectType: SerializableObject> {
     
     // update if exist
     public func updateObject(json: Json, forKey key: String) {
-        if let object = _cache[key] {
+        if var object = _cache[key] {
             object.restoreFromDictionary(json)
             _store.setValue(object.convertToDictionary(), forKey: key)
         }
