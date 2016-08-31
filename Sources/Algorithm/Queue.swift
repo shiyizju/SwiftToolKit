@@ -18,7 +18,7 @@ public class Queue<T> {
         return _dlist.count
     }
     
-    public func isEmpty() -> Bool {
+    public var isEmpty: Bool {
         return _dlist.head == nil
     }
     
