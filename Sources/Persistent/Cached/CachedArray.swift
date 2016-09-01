@@ -1,6 +1,5 @@
 //
 //  CachedArray.swift
-//  baomingba
 //
 //  Created by XiaoshaQuan on 3/31/16.
 //

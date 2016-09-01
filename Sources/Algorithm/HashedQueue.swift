@@ -1,6 +1,5 @@
 //
 //  IndexedQueue.swift
-//  baomingba
 //
 //  Created by XiaoshaQuan on 12/9/15.
 //

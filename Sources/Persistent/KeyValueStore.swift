@@ -1,6 +1,5 @@
 //
 //  KeyValueStore.swift
-//  baomingba
 //
 //  Created by XiaoshaQuan on 4/1/16.
 //

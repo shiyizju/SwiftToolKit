@@ -1,6 +1,5 @@
 //
 //  BidirectionalMap.swift
-//  baomingba
 //
 //  Created by XiaoshaQuan on 10/21/15.
 //

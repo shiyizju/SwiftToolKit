@@ -1,6 +1,5 @@
 //
 //  LRUCache.swift
-//  baomingba
 //
 //  Created by XiaoshaQuan on 11/5/15.
 //

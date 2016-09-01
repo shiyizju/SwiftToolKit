@@ -1,6 +1,5 @@
 //
 //  SerializableObject.swift
-//  baomingba
 //
 //  Created by XiaoshaQuan on 4/24/16.
 //

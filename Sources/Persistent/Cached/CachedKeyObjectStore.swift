@@ -1,6 +1,5 @@
 //
 //  CachedKeyObjectStore.swift
-//  baomingba
 //
 //  Created by XiaoshaQuan on 3/28/16.
 //

@@ -1,6 +1,5 @@
 //
 //  DList.swift
-//  baomingba
 //
 //  Created by XiaoshaQuan on 11/30/15.
 //

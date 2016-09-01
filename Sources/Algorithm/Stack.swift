@@ -1,6 +1,5 @@
 //
 //  Stack.swift
-//  baomingba
 //
 //  Created by XiaoshaQuan on 12/18/15.
 //

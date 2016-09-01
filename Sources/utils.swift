@@ -1,6 +1,5 @@
 //
 //  JsonUtils.swift
-//  baomingba
 //
 //  Created by XiaoshaQuan on 12/17/15.
 //
