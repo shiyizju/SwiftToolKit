@@ -4,17 +4,17 @@
 //  Created by XiaoshaQuan on 3/31/16.
 //
 
-public class CachedArray<T> {
+open class CachedArray<T> {
     
-    private var _cache : [T]
-    private var _store : KeyValueStore<T>?
+    fileprivate var _cache : [T]
+    fileprivate var _store : KeyValueStore<T>?
     
     public init(path: String) {
         _store = KeyValueStore(path: path)
         
         if let store = _store {
             
-            let orderedKvPair = store.allKeyValues().sort({ (kv0, kv1) -> Bool in
+            let orderedKvPair = store.allKeyValues().sorted(by: { (kv0, kv1) -> Bool in
                 // sort according to index
                 if let index0 = Int(kv0.0), let index1 = Int(kv1.0) {
                     return index0 < index1
@@ -50,26 +50,26 @@ public class CachedArray<T> {
         }
     }
     
-    public func append(object: T) {
+    open func append(_ object: T) {
         _store?.setValue(object, forKey: "\(_cache.count)")
         _cache.append(object)
     }
     
-    public func objectAtIndex(index: Int) -> T {
+    open func objectAtIndex(_ index: Int) -> T {
         return _cache[index]
     }
     
-    public func setObjectAtIndex(index: Int, object: T) {
+    open func setObjectAtIndex(_ index: Int, object: T) {
         _store?.setValue(object, forKey: "\(_cache.count)")
         _cache[index] = object
     }
     
     // all object in order
-    public func allObjects() -> [T] {
+    open func allObjects() -> [T] {
         return _cache
     }
     
-    public func removeAllObjects() {
+    open func removeAllObjects() {
         _cache.removeAll()
         _store?.removeAllValues()
     }

@@ -9,12 +9,12 @@ import Foundation
 
 // have a in-memory copy of value set, currently only support string
 
-public class CachedValueSet {
+open class CachedValueSet {
     
-    private var _store : ValueSetStore?
-    private var _cache : Set<String>
+    fileprivate var _store : ValueSetStore?
+    fileprivate var _cache : Set<String>
     
-    public var count : Int {
+    open var count : Int {
         return _cache.count
     }
     
@@ -39,26 +39,26 @@ public class CachedValueSet {
         }
     }
     
-    public func insert(value: String) {
+    open func insert(_ value: String) {
         _cache.insert(value)
         _store?.insert(value)
     }
     
-    public func remove(value: String) {
+    open func remove(_ value: String) {
         _cache.remove(value)
         _store?.remove(value)
     }
     
-    public func contains(value: String) -> Bool {
+    open func contains(_ value: String) -> Bool {
         return _cache.contains(value)
     }
     
-    public func allValues() -> Set<String> {
+    open func allValues() -> Set<String> {
         return _cache
     }
     
-    public func removeAllValues() {
-        _cache.removeAll(keepCapacity: true)
+    open func removeAllValues() {
+        _cache.removeAll(keepingCapacity: true)
         _store?.removeAllValues()
     }
 }

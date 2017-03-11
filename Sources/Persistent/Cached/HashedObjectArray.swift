@@ -6,25 +6,24 @@
 
 import Foundation
 
-// key must be string
 
-public class HashedObjectArray<T:SerializableObject> {
+// base on CachedObjectArray, add key index map.
+
+open class HashedObjectArray<T:SerializableObject> {
     
     private var _keyIndexMap : CachedBiMap<Int>
     private var _objectArray : CachedObjectArray<T>
     
-    
-    private func key2Index(key: String) -> Int? {
+    private func key2Index(_ key: String) -> Int? {
         return _keyIndexMap.valueForKey(key)
     }
     
-    
-    public init(path: String, builder: () -> T) {
+    public init(path: String, builder: @escaping () -> T) {
         _keyIndexMap = CachedBiMap(path: path + "_keyIndexMap")
         _objectArray = CachedObjectArray(path: path + "_objectArray", builder: builder)
     }
     
-    public func append(object: T, forKey key: String) {
+    open func append(_ object: T, forKey key: String) {
         
         if let index = key2Index(key) {
             _objectArray.updateObjectAtIndex(index, json: object.convertToDictionary())
@@ -37,7 +36,7 @@ public class HashedObjectArray<T:SerializableObject> {
         }
     }
     
-    public func appendJson(json: Json, forKey key: String) {
+    open func appendJson(_ json: Json, forKey key: String) {
         
         if let index = key2Index(key) {
             _objectArray.updateObjectAtIndex(index, json: json)
@@ -50,11 +49,11 @@ public class HashedObjectArray<T:SerializableObject> {
         }
     }
     
-    public func objectAtIndex(index: Int) -> T {
+    open func objectAtIndex(_ index: Int) -> T {
         return _objectArray.objectAtIndex(index)
     }
     
-    public func objectForKey(key: String) -> T? {
+    open func objectForKey(_ key: String) -> T? {
         if let index = key2Index(key) {
             return _objectArray.objectAtIndex(index)
         }
@@ -62,22 +61,22 @@ public class HashedObjectArray<T:SerializableObject> {
         return nil
     }
     
-    public func updateObjectAtIndex(index: Int, json: Json) {
+    open func updateObjectAtIndex(_ index: Int, json: Json) {
         _objectArray.updateObjectAtIndex(index, json: json)
     }
     
-    public func updateObjectForKey(key: String, json: Json) {
+    open func updateObjectForKey(_ key: String, json: Json) {
         if let index = key2Index(key) {
             _objectArray.updateObjectAtIndex(index, json: json)
         }
     }
     
     // all object in order
-    public func allObjects() -> [T] {
+    open func allObjects() -> [T] {
         return _objectArray.allObjects()
     }
     
-    public func removeAllObjects() {
+    open func removeAllObjects() {
         _keyIndexMap.removeAll()
         _objectArray.removeAllObjects()
     }

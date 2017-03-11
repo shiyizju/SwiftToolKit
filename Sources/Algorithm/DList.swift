@@ -28,9 +28,9 @@ internal class DListNode<T> {
 
 internal class DList<T> {
     
-    private var _head: DListNode<T>?
-    private var _tail: DListNode<T>?
-    private(set) var count: Int = 0
+    fileprivate var _head: DListNode<T>?
+    fileprivate var _tail: DListNode<T>?
+    fileprivate(set) var count: Int = 0
     
     var head: DListNode<T>? {
         return _head
@@ -41,7 +41,7 @@ internal class DList<T> {
     }
     
     // node must be in the list
-    func removeNode(node: DListNode<T>) {
+    func removeNode(_ node: DListNode<T>) {
         
         if node.prev == nil {   // head
             _head = node.next
@@ -58,8 +58,23 @@ internal class DList<T> {
         count -= 1
     }
     
+    // remove all nodes
+    func removeAll() {
+        
+        // break cycle reference
+        while _head != nil {
+            _head!.prev = nil
+            _head = _head!.next
+        }
+        
+        _head = nil
+        _tail = nil
+        
+        count = 0
+    }
+    
     // insert node at head. node must not in the list.
-    func insertNode(node: DListNode<T>) {
+    func insertNode(_ node: DListNode<T>) {
         
         if _head == nil {        // list is empty
             _head = node
@@ -78,7 +93,7 @@ internal class DList<T> {
     }
     
     // insert node at tail. node must not in the list.
-    func appendNode(node: DListNode<T>) {
+    func appendNode(_ node: DListNode<T>) {
         
         if _head == nil {       // list is empty
             _head = node

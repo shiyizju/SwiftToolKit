@@ -7,13 +7,17 @@
 import Foundation
 
 
-public class CachedKeyObjectStore<ObjectType: SerializableObject> {
+open class CachedKeyObjectStore<ObjectType: SerializableObject> {
     
-    private var _store : KeyValueStore<Json>
-    private var _cache : [String: ObjectType] = [:]
-    private var _builder: () -> ObjectType
+    fileprivate var _store : KeyValueStore<Json>
+    fileprivate var _cache : [String: ObjectType] = [:]
+    fileprivate var _builder: () -> ObjectType
     
-    public init(path: String, objectBuilder builder: () -> ObjectType) {
+    open var count: Int {
+        return _cache.count
+    }
+    
+    public init(path: String, objectBuilder builder: @escaping () -> ObjectType) {
         _store = KeyValueStore<Json>(path: path)
         _builder = builder
         
@@ -26,20 +30,20 @@ public class CachedKeyObjectStore<ObjectType: SerializableObject> {
         })
     }
     
-    private func transform(json: Json) -> ObjectType {
+    fileprivate func transform(_ json: Json) -> ObjectType {
         var object = _builder()
         object.restoreFromDictionary(json)
         return object
     }
     
     // will replace object
-    public func setObject(object: ObjectType, forKey key: String) {
+    open func setObject(_ object: ObjectType, forKey key: String) {
         _cache[key] = object
         _store.setValue(object.convertToDictionary(), forKey: key)
     }
     
     // create if not exist, otherwise update
-    public func setJson(json: Json, forKey key: String) {
+    open func setJson(_ json: Json, forKey key: String) {
         if var object = _cache[key] {
             object.restoreFromDictionary(json)
             _store.setValue(object.convertToDictionary(), forKey: key)
@@ -51,32 +55,32 @@ public class CachedKeyObjectStore<ObjectType: SerializableObject> {
     }
     
     // update if exist
-    public func updateObject(json: Json, forKey key: String) {
+    open func updateObject(_ json: Json, forKey key: String) {
         if var object = _cache[key] {
             object.restoreFromDictionary(json)
             _store.setValue(object.convertToDictionary(), forKey: key)
         }
     }
     
-    public func objectForKey(key: String) -> ObjectType? {
+    open func objectForKey(_ key: String) -> ObjectType? {
         return _cache[key]
     }
     
-    public func allObjects() -> [ObjectType] {
+    open func allObjects() -> [ObjectType] {
         return Array(_cache.values)
     }
     
-    public func allKeyObjects() -> [String: ObjectType] {
+    open func allKeyObjects() -> [String: ObjectType] {
         return _cache
     }
     
-    public func removeObjectForKey(key: String) {
-        _cache.removeValueForKey(key)
+    open func removeObjectForKey(_ key: String) {
+        _cache.removeValue(forKey: key)
         _store.removeValueForKey(key)
     }
     
-    public func removeAllObjects() {
-        _cache.removeAll(keepCapacity: true)
+    open func removeAllObjects() {
+        _cache.removeAll(keepingCapacity: true)
         _store.removeAllValues()
     }
 }

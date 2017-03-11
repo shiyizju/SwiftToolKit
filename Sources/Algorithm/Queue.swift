@@ -5,35 +5,35 @@
 //
 
 
-public class Queue<T> {
+open class Queue<T> {
     
-    private var _dlist: DList<T> = DList<T>()
+    fileprivate var _dlist: DList<T> = DList<T>()
     
     public init() {
         
     }
     
-    public var count: Int {
+    open var count: Int {
         return _dlist.count
     }
     
-    public var isEmpty: Bool {
+    open var isEmpty: Bool {
         return _dlist.head == nil
     }
     
-    public func front() -> T? {
+    open func front() -> T? {
         return _dlist.head?.data
     }
     
-    public func back() -> T? {
+    open func back() -> T? {
         return _dlist.tail?.data
     }
     
-    public func enqueue(value: T) {
+    open func enqueue(_ value: T) {
         _dlist.appendNode(DListNode(data: value))
     }
     
-    public func dequeue() {
+    open func dequeue() {
         if let head = _dlist.head {
             _dlist.removeNode(head)
         }

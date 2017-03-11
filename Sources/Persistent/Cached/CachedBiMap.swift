@@ -9,10 +9,10 @@ import Foundation
 
 // currently key must be string
 
-public class CachedBiMap<V: Hashable> {
+open class CachedBiMap<V: Hashable> {
     
-    private var _store : KeyValueStore<V>?
-    private var _cache : BiMap<String, V>
+    fileprivate var _store : KeyValueStore<V>?
+    fileprivate var _cache : BiMap<String, V>
     
     public init(path: String) {
         _store = KeyValueStore(path: path)
@@ -23,31 +23,31 @@ public class CachedBiMap<V: Hashable> {
         }
     }
     
-    public func valueForKey(key: String) -> V? {
+    open func valueForKey(_ key: String) -> V? {
         return _cache.valueForKey(key)
     }
     
-    public func keyForValue(value: V) -> String? {
+    open func keyForValue(_ value: V) -> String? {
         return _cache.keyForValue(value)
     }
     
-    public func setValue(value: V, forKey key: String) {
+    open func setValue(_ value: V, forKey key: String) {
         _cache.setValue(value, forKey: key)
         _store?.setValue(value, forKey: key)
     }
     
-    public func removeKey(key: String) {
+    open func removeKey(_ key: String) {
         _cache.removeKey(key)
         _store?.removeValueForKey(key)
     }
     
-    public func removeValue(value: V) {
+    open func removeValue(_ value: V) {
         if let key = keyForValue(value) {
             removeKey(key)
         }
     }
     
-    public func removeAll() {
+    open func removeAll() {
         _cache.removeAll()
         _store?.removeAllValues()
     }

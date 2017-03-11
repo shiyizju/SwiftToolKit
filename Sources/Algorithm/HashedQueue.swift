@@ -8,30 +8,34 @@
 // K: index type
 // V: value type
 
-public class HashedQueue<K: Hashable, V> {
+open class HashedQueue<K: Hashable, V> {
     
-    private typealias T = (K, V)
+    fileprivate typealias T = (K, V)
     
-    private var _map: [K: DListNode<T>] = [:]
-    private var _dlist: DList<T> = DList<T>()
+    fileprivate var _map: [K: DListNode<T>] = [:]
+    fileprivate var _dlist: DList<T> = DList<T>()
     
     public init() {
         
     }
     
-    public func isEmpty() -> Bool {
+    open var count: Int {
+        return _dlist.count
+    }
+    
+    open func isEmpty() -> Bool {
         return _dlist.head == nil
     }
     
-    public func front() -> (K, V)? {
+    open func front() -> (K, V)? {
         return _dlist.head?.data
     }
     
-    public func back() -> (K, V)? {
+    open func back() -> (K, V)? {
         return _dlist.tail?.data
     }
     
-    public func enqueue(keyValuePair: (K, V)) {
+    open func enqueue(_ keyValuePair: (K, V)) {
         
         let key = keyValuePair.0
         
@@ -46,26 +50,26 @@ public class HashedQueue<K: Hashable, V> {
         }
     }
     
-    public func dequeue() {
+    open func dequeue() {
         
         if let head = _dlist.head {
             _dlist.removeNode(head)
-            _map.removeValueForKey(head.data.0)
+            _map.removeValue(forKey: head.data.0)
         }
     }
     
-    public func removeAll() {
+    open func removeAll() {
         while !isEmpty() {
             dequeue()
         }
     }
     
     // all values in order
-    public func allKeyValues() -> [(K, V)] {
+    open func allKeyValues() -> [(K, V)] {
         return _dlist.allValues()
     }
     
-    public func getValueForKey(key: K) -> V? {
+    open func getValueForKey(_ key: K) -> V? {
         
         guard let node = _map[key] else {
             return nil
@@ -74,13 +78,13 @@ public class HashedQueue<K: Hashable, V> {
         return node.data.1
     }
     
-    public func removeValueForKey(key: K) {
+    open func removeValueForKey(_ key: K) {
         
         guard let node = _map[key] else {
             return
         }
         
         _dlist.removeNode(node)
-        _map.removeValueForKey(key)
+        _map.removeValue(forKey: key)
     }
 }

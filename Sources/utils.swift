@@ -7,18 +7,18 @@
 import Foundation
 
 
-public typealias Json = [String: AnyObject]
+public typealias Json = [String: Any]
 public typealias JsonArray = [Json]
 
 
 // JsonType usually is [String: AnyObject] or [[String: AnyObject]]
-public func jsonString2jsonObject<JsonType>(jsonString: String) -> JsonType? {
+public func jsonString2jsonObject<JsonType>(_ jsonString: String) -> JsonType? {
     
     var jsonObject: JsonType? = nil
     
-    if let jsonData = jsonString.dataUsingEncoding(NSUTF8StringEncoding) {
+    if let jsonData = jsonString.data(using: String.Encoding.utf8) {
         do {
-            jsonObject = try NSJSONSerialization.JSONObjectWithData(jsonData, options: []) as? JsonType
+            jsonObject = try JSONSerialization.jsonObject(with: jsonData, options: []) as? JsonType
         }
         catch let error as NSError {
             print(error.description)
@@ -30,18 +30,16 @@ public func jsonString2jsonObject<JsonType>(jsonString: String) -> JsonType? {
 
 
 // JsonType usually is [String: AnyObject] or [[String: AnyObject]]
-public func jsonObject2jsonString<JsonType>(jsonObject: JsonType) -> String? {
+public func jsonObject2jsonString<JsonType>(_ jsonObject: JsonType) -> String? {
     
     var jsonString : String? = nil
     
-    if let obj = jsonObject as? AnyObject {
-        do {
-            let jsonData = try NSJSONSerialization.dataWithJSONObject(obj, options: [])
-            jsonString = NSString(data: jsonData, encoding: NSUTF8StringEncoding) as? String
-        }
-        catch let error as NSError {
-            print(error.description)
-        }
+    do {
+        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+        jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue) as? String
+    }
+    catch let error as NSError {
+        print(error.description)
     }
     
     return jsonString
@@ -51,7 +49,7 @@ public func jsonObject2jsonString<JsonType>(jsonObject: JsonType) -> String? {
 
 extension Dictionary {
     
-    internal func map<K: Hashable, V>(@noescape f: Element -> (K, V)) -> [K : V] {
+    internal func map<K: Hashable, V>(_ f: (Element) -> (K, V)) -> [K : V] {
         var mapped = [K : V]()
         
         for element in self {
@@ -62,7 +60,7 @@ extension Dictionary {
         return mapped
     }
     
-    internal func map<K: Hashable, V>(@noescape f: Element -> (K, [V])) -> [K : [V]] {
+    internal func map<K: Hashable, V>(_ f: (Element) -> (K, [V])) -> [K : [V]] {
         var mapped = [K : [V]]()
         
         for element in self {
@@ -74,7 +72,7 @@ extension Dictionary {
     }
     
     
-    internal func filterMap<U>(@noescape f: Value -> U?) -> [Key : U] {
+    internal func filterMap<U>(_ f: (Value) -> U?) -> [Key : U] {
         var mapped = [Key : U]()
         
         for (key, value) in self {

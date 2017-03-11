@@ -8,23 +8,23 @@
 // Latest recent used cache
 
 
-public class LRUCache<K: Hashable, V> {
+open class LRUCache<K: Hashable, V> {
     
-    private var _capacity: Int
-    private var _map: [K: DListNode<(K, V)>] = [:]
-    private var _dlist: DList<(K, V)> = DList()
+    fileprivate var _capacity: Int
+    fileprivate var _map: [K: DListNode<(K, V)>] = [:]
+    fileprivate var _dlist: DList<(K, V)> = DList()
     
     public init(capacity: Int) {
         _capacity = capacity
     }
     
     // all key values in order
-    public func allKeyValues() -> [(K, V)] {
+    open func allKeyValues() -> [(K, V)] {
         return _dlist.allValues()
     }
     
     // all values in order
-    public func allValues() -> [V] {
+    open func allValues() -> [V] {
         var values: [V] = []
         for (_, value) in _dlist.allValues() {
             values.append(value)
@@ -32,7 +32,7 @@ public class LRUCache<K: Hashable, V> {
         return values
     }
     
-    public func getValueForKey(key: K) -> V? {
+    open func getValueForKey(_ key: K) -> V? {
         
         if _capacity == 0 {
             return nil
@@ -50,7 +50,7 @@ public class LRUCache<K: Hashable, V> {
         return node.data.1
     }
     
-    public func setValue(value: V, forKey key: K) {
+    open func setValue(_ value: V, forKey key: K) {
         
         if _capacity == 0 {
             return
@@ -67,7 +67,7 @@ public class LRUCache<K: Hashable, V> {
         else if _map.count == _capacity {
             let node = _dlist.tail!
             
-            _map.removeValueForKey(node.data.0)
+            _map.removeValue(forKey: node.data.0)
             _dlist.removeNode(node)
             
             node.data = (key, value)
@@ -82,6 +82,11 @@ public class LRUCache<K: Hashable, V> {
             _dlist.insertNode(node)
             _map[key] = node
         }
+    }
+    
+    open func removeAll() {
+        _map.removeAll()
+        _dlist.removeAll()
     }
 }
 

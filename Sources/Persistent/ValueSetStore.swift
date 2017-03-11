@@ -9,11 +9,11 @@ import FMDB
 
 // Current only support String value, sinle coloum database
 
-public class ValueSetStore: NSObject {
+open class ValueSetStore: NSObject {
     
-    private static let sharedQueue = dispatch_queue_create("com.qiudao.baomingba.valuesetstore.queue", DISPATCH_QUEUE_SERIAL)
+    fileprivate static let sharedQueue = DispatchQueue(label: "com.qiudao.baomingba.valuesetstore.queue", attributes: [])
     
-    private var _database : FMDatabase
+    fileprivate var _database : FMDatabase
     
     public init?(path: String) {
         
@@ -38,11 +38,11 @@ public class ValueSetStore: NSObject {
         _database.close()
     }
     
-    public func insert(value: String) {
+    open func insert(_ value: String) {
         
         async { () -> Void in
             
-            let result = self._database.executeUpdate("REPLACE INTO valueset (value) values (?)", withArgumentsInArray: [value])
+            let result = self._database.executeUpdate("REPLACE INTO valueset (value) values (?)", withArgumentsIn: [value])
             
             if !result {
                 print("fail to store value: \(value)")
@@ -50,11 +50,11 @@ public class ValueSetStore: NSObject {
         }
     }
     
-    public func remove(value: String) {
+    open func remove(_ value: String) {
         
         async { () -> Void in
             
-            let result = self._database.executeUpdate("DELETE FROM valueset WHERE value = ?", withArgumentsInArray: [value])
+            let result = self._database.executeUpdate("DELETE FROM valueset WHERE value = ?", withArgumentsIn: [value])
             
             if !result {
                 print("fail to remove value: \(value)")
@@ -62,49 +62,49 @@ public class ValueSetStore: NSObject {
         }
     }
     
-    public func contains(value: String) -> Bool {
+    open func contains(_ value: String) -> Bool {
         
         var result: Bool = false
         
         sync { () -> Void in
             
-            let resultSet = self._database.executeQuery("SELECT * FROM valueset WHERE value = ?", withArgumentsInArray: [value])
+            let resultSet = self._database.executeQuery("SELECT * FROM valueset WHERE value = ?", withArgumentsIn: [value])
             
-            result = resultSet.next()
+            result = (resultSet?.next())!
             
-            resultSet.close()
+            resultSet?.close()
         }
         
         return result
     }
     
-    public func allValues() -> Set<String> {
+    open func allValues() -> Set<String> {
         
         var valueset = Set<String>()
         
         sync { () -> Void in
             
-            let result = self._database.executeQuery("SELECT * FROM valueset", withArgumentsInArray: [])
+            let result = self._database.executeQuery("SELECT * FROM valueset", withArgumentsIn: [])
             
-            while result.next() {
-                if let value = result.stringForColumn("value") {
+            while (result?.next())! {
+                if let value = result?.string(forColumn: "value") {
                     valueset.insert(value)
                 }
                 else {
                     assertionFailure("fail to parse value")
                 }
             }
-            result.close()
+            result?.close()
         }
         
         return valueset
     }
     
-    public func removeAllValues() {
+    open func removeAllValues() {
         
         async { () -> Void in
             
-            let result = self._database.executeUpdate("DELETE FROM valueset", withArgumentsInArray: [])
+            let result = self._database.executeUpdate("DELETE FROM valueset", withArgumentsIn: [])
             
             if !result {
                 print("fail to remove valueset")
@@ -112,12 +112,12 @@ public class ValueSetStore: NSObject {
         }
     }
     
-    private func sync(block: () -> Void) {
-        dispatch_sync(ValueSetStore.sharedQueue, block)
+    fileprivate func sync(_ block: () -> Void) {
+        ValueSetStore.sharedQueue.sync(execute: block)
     }
     
-    private func async(block: () -> Void ) {
-        dispatch_async(ValueSetStore.sharedQueue, block)
+    fileprivate func async(_ block: @escaping () -> Void ) {
+        ValueSetStore.sharedQueue.async(execute: block)
     }
 }
 

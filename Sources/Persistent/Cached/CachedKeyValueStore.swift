@@ -9,40 +9,40 @@ import Foundation
 
 // have a in-memory copy of key value
 
-public class CachedKeyValueStore<ValueType> {
+open class CachedKeyValueStore<ValueType> {
     
-    private var _store : KeyValueStore<ValueType>
-    private var _cache : [String: ValueType] = [:]
+    fileprivate var _store : KeyValueStore<ValueType>
+    fileprivate var _cache : [String: ValueType] = [:]
     
     public init(path: String) {
         _store = KeyValueStore(path: path)
         _cache = _store.allKeyValues()
     }
     
-    public func setValue(value: ValueType, forKey key: String) {
+    open func setValue(_ value: ValueType, forKey key: String) {
         _cache[key] = value
         _store.setValue(value, forKey: key)
     }
     
-    public func valueForKey(key: String) -> ValueType? {
+    open func valueForKey(_ key: String) -> ValueType? {
         return _cache[key]
     }
     
-    public func allValues() -> [ValueType] {
+    open func allValues() -> [ValueType] {
         return Array(_cache.values)
     }
     
-    public func allKeyValues() -> [String: ValueType] {
+    open func allKeyValues() -> [String: ValueType] {
         return _cache
     }
     
-    public func removeValueForKey(key: String) {
-        _cache.removeValueForKey(key)
+    open func removeValueForKey(_ key: String) {
+        _cache.removeValue(forKey: key)
         _store.removeValueForKey(key)
     }
     
-    public func removeAllValues() {
-        _cache.removeAll(keepCapacity: true)
+    open func removeAllValues() {
+        _cache.removeAll(keepingCapacity: true)
         _store.removeAllValues()
     }
     

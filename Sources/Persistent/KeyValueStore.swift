@@ -9,12 +9,12 @@ import FMDB
 
 // Supporting type: Int, String, Json type (can be converted to json use NSJSONSErialization)
 
-private let sharedQueue = dispatch_queue_create("com.qiudao.baomingba.keyvaluestore.queue", DISPATCH_QUEUE_SERIAL)
+private let sharedQueue = DispatchQueue(label: "com.qiudao.baomingba.keyvaluestore.queue", attributes: [])
 
 
-public class KeyValueStore<T> {
+open class KeyValueStore<T> {
     
-    private var _database : FMDatabase
+    fileprivate var _database : FMDatabase
     
     public init(path: String) {
         
@@ -36,40 +36,40 @@ public class KeyValueStore<T> {
         _database.close()
     }
     
-    public func setValue(value: T, forKey key: String) {
+    open func setValue(_ value: T, forKey key: String) {
         
         guard let stringValue = value2String(value) else {
             return
         }
     
         async {
-            if !self._database.executeUpdate("REPLACE INTO bmb_table (bmb_key,bmb_value) values (?,?)", withArgumentsInArray: [key, stringValue]) {
+            if !self._database.executeUpdate("REPLACE INTO bmb_table (bmb_key,bmb_value) values (?,?)", withArgumentsIn: [key, stringValue]) {
                 print("fail to store object of key: \(key)")
             }
         }
     }
     
-    public func removeValueForKey(key: String) {
+    open func removeValueForKey(_ key: String) {
         async {
-            if !self._database.executeUpdate("DELETE FROM bmb_table WHERE bmb_key = ?", withArgumentsInArray: [key]) {
+            if !self._database.executeUpdate("DELETE FROM bmb_table WHERE bmb_key = ?", withArgumentsIn: [key]) {
                 print("fail to remove object with key \(key)")
             }
         }
     }
     
-    public func valueForKey(key: String) -> T? {
+    open func valueForKey(_ key: String) -> T? {
         
         var result: String? = nil
         
         sync {
-            let rs = self._database.executeQuery("SELECT * FROM bmb_table WHERE bmb_key = ?", withArgumentsInArray: [key])
-            if rs.next() {
-                result = rs.stringForColumn("bmb_value")
+            let rs = self._database.executeQuery("SELECT * FROM bmb_table WHERE bmb_key = ?", withArgumentsIn: [key])
+            if (rs?.next())! {
+                result = rs?.string(forColumn: "bmb_value")
             }
             else {
                 print("fail to get value for key \(key)")
             }
-            rs.close()
+            rs?.close()
         }
         
         if let stringValue = result {
@@ -80,18 +80,18 @@ public class KeyValueStore<T> {
     }
     
     
-    public func allValues() -> [T] {
+    open func allValues() -> [T] {
         
         var results : [String] = []
         
         sync {
-            let rs = self._database.executeQuery("SELECT * FROM bmb_table", withArgumentsInArray: [])
-            while rs.next() {
-                if let object = rs.stringForColumn("bmb_value") {
+            let rs = self._database.executeQuery("SELECT * FROM bmb_table", withArgumentsIn: [])
+            while (rs?.next())! {
+                if let object = rs?.string(forColumn: "bmb_value") {
                     results.append(object)
                 }
             }
-            rs.close()
+            rs?.close()
         }
         
         return results.flatMap({ (stringValue) -> T? in
@@ -100,18 +100,18 @@ public class KeyValueStore<T> {
     }
     
     
-    public func allKeyValues() -> [String: T] {
+    open func allKeyValues() -> [String: T] {
         
         var results : [String: String] = [:]
         
         sync {
-            let rs = self._database.executeQuery("SELECT * FROM bmb_table", withArgumentsInArray: [])
-            while rs.next() {
-                if let key = rs.stringForColumn("bmb_key"), let object = rs.stringForColumn("bmb_value") {
+            let rs = self._database.executeQuery("SELECT * FROM bmb_table", withArgumentsIn: [])
+            while (rs?.next())! {
+                if let key = rs?.string(forColumn: "bmb_key"), let object = rs?.string(forColumn: "bmb_value") {
                     results[key] = object
                 }
             }
-            rs.close()
+            rs?.close()
         }
         
         return results.filterMap({ (stringValue) -> T? in
@@ -120,11 +120,11 @@ public class KeyValueStore<T> {
     }
     
     
-    public func removeAllValues() {
+    open func removeAllValues() {
         
         async { () -> Void in
             
-            let result = self._database.executeUpdate("DELETE FROM bmb_table", withArgumentsInArray: [])
+            let result = self._database.executeUpdate("DELETE FROM bmb_table", withArgumentsIn: [])
             
             if !result {
                 print("fail to remove all objects")
@@ -133,12 +133,15 @@ public class KeyValueStore<T> {
     }
     
     
-    private func value2String(value: T) -> String? {
+    fileprivate func value2String(_ value: T) -> String? {
         
         if let stringValue = value as? String {
             return stringValue
         }
         else if let intValue = value as? Int {
+            return String(intValue)
+        }
+        else if let intValue = value as? Int64 {
             return String(intValue)
         }
         else if let jsonString = jsonObject2jsonString(value) {
@@ -148,7 +151,7 @@ public class KeyValueStore<T> {
         return nil
     }
     
-    private func string2Value(string: String) -> T? {
+    fileprivate func string2Value(_ string: String) -> T? {
         
         if let value = string as? T {
             return value
@@ -164,12 +167,12 @@ public class KeyValueStore<T> {
     }
     
     
-    private func sync(block: () -> Void) {
-        dispatch_sync(sharedQueue, block)
+    fileprivate func sync(_ block: () -> Void) {
+        sharedQueue.sync(execute: block)
     }
     
-    private func async(block: () -> Void ) {
-        dispatch_async(sharedQueue, block)
+    fileprivate func async(_ block: @escaping () -> Void ) {
+        sharedQueue.async(execute: block)
     }
     
 }

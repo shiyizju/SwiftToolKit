@@ -5,6 +5,6 @@
 //
 
 public protocol SerializableObject {
-    mutating func restoreFromDictionary(dictionary: Json)
+    mutating func restoreFromDictionary(_ dictionary: Json)
     func convertToDictionary() -> Json
 }

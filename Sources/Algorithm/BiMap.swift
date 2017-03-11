@@ -10,7 +10,7 @@
 
 // This class is not thread safe
 
-public class BiMap<KeyType: Hashable, ValueType: Hashable> {
+open class BiMap<KeyType: Hashable, ValueType: Hashable> {
     
     public init() {
         
@@ -22,57 +22,56 @@ public class BiMap<KeyType: Hashable, ValueType: Hashable> {
         }
     }
     
-    private var _map: [KeyType: ValueType] = [:]
-    public var keyValueMap: [KeyType: ValueType] {
+    fileprivate var _map: [KeyType: ValueType] = [:]
+    open var keyValueMap: [KeyType: ValueType] {
         return _map
     }
     
-    private var _reverseMap: [ValueType: KeyType]   = [:]
-    public var valueKeyMap: [ValueType: KeyType] {
+    fileprivate var _reverseMap: [ValueType: KeyType]   = [:]
+    open var valueKeyMap: [ValueType: KeyType] {
         return _reverseMap
     }
     
-    public func valueForKey(key: KeyType) -> ValueType? {
+    open func valueForKey(_ key: KeyType) -> ValueType? {
         return _map[key]
     }
     
-    public func keyForValue(value: ValueType) -> KeyType? {
+    open func keyForValue(_ value: ValueType) -> KeyType? {
         return _reverseMap[value]
     }
     
-    public func setValue(value: ValueType, forKey key: KeyType) {
+    open func setValue(_ value: ValueType, forKey key: KeyType) {
         
-        if let oldValue = _map[key] {
-            _reverseMap.removeValueForKey(oldValue)
-        }
+        // remove previous relation
+        removeKey(key)
+        removeValue(value)
         
+        // create new relation
         _map[key] = value
         _reverseMap[value] = key
     }
     
-    public func addDictionary(dict: [KeyType: ValueType]) {
+    open func addDictionary(_ dict: [KeyType: ValueType]) {
         for (key, value) in dict {
             setValue(value, forKey: key)
         }
     }
     
-    public func removeKey(key: KeyType) {
-        
+    open func removeKey(_ key: KeyType) {
         if let value = _map[key] {
-            _map.removeValueForKey(key)
-            _reverseMap.removeValueForKey(value)
+            _map.removeValue(forKey: key)
+            _reverseMap.removeValue(forKey: value)
         }
     }
     
-    public func removeValue(value: ValueType) {
-        
+    open func removeValue(_ value: ValueType) {
         if let key = _reverseMap[value] {
-            _reverseMap.removeValueForKey(value)
-            _map.removeValueForKey(key)
+            _reverseMap.removeValue(forKey: value)
+            _map.removeValue(forKey: key)
         }
     }
     
-    public func removeAll() {
+    open func removeAll() {
         _map.removeAll()
         _reverseMap.removeAll()
     }

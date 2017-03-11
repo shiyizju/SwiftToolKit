@@ -5,11 +5,11 @@
 //
 
 
-public class Stack<T> {
+open class Stack<T> {
     
-    private var _dlist: DList<T> = DList<T>()
+    fileprivate var _dlist: DList<T> = DList<T>()
     
-    public var count: Int {
+    open var count: Int {
         return _dlist.count
     }
     
@@ -17,19 +17,19 @@ public class Stack<T> {
         
     }
     
-    public func isEmpty() -> Bool {
+    open func isEmpty() -> Bool {
         return _dlist.head == nil
     }
     
-    public func top() -> T? {
+    open func top() -> T? {
         return _dlist.head?.data
     }
     
-    public func push(value: T) {
+    open func push(_ value: T) {
         _dlist.insertNode(DListNode(data: value))
     }
     
-    public func pop() {
+    open func pop() {
         if let head = _dlist.head {
             _dlist.removeNode(head)
         }
